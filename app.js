@@ -45,6 +45,20 @@ const ItemCtrl = (function() {
 
             return newItem;
         },
+        getTotalCalories: function(){
+            let total = 0;
+
+            //Loop through items
+            data.items.forEach((item)=>{
+                total += item.calories;
+            });
+            
+            //Set Total Calories in ds
+            data.totalCalories = total;
+
+            //return Total
+            return data.totalCalories;
+        },
         logData: function(){
             return data;
         }
@@ -58,7 +72,8 @@ const UICtrl = (function() {
         itemList: '#item-list',
         addBtn: '.add-btn',
         itemName: '#item-name',
-        itemCalories: '#item-calories'
+        itemCalories: '#item-calories',
+        totalCalories: '.total-calories'
     }
     //Public Method
     return{
@@ -107,6 +122,9 @@ const UICtrl = (function() {
         hideList: function(){
             document.querySelector(UISelectors.itemList).style.display = 'none';
         },
+        showTotalCalories: function(total){
+            document.querySelector(UISelectors.totalCalories).textContent = total;
+        },
         getSelectors : function(){
             return UISelectors;
         }
@@ -140,11 +158,21 @@ const App = (function(ItemCtrl, UICtrl) {
 
             //Add Items To UI
             UICtrl.addListItem(newItem);
+            
+            //get The total calories
+            const totalCalories = ItemCtrl.getTotalCalories();
+
+            //Add total calories to UI
+            UICtrl.showTotalCalories(totalCalories);
 
             //Clear the input fileds
             UICtrl.clearInputs();
         }else{
-
+            if(input.name === ''){
+                alert('Please Enter The Meal Name');
+            }else{  
+                alert('Please Enter The Calories Count');
+            }
         }
         e.preventDefault();
     }
@@ -163,12 +191,17 @@ const App = (function(ItemCtrl, UICtrl) {
                 UICtrl.populateItemList(items);
             }
 
+            //get The total calories
+            const totalCalories = ItemCtrl.getTotalCalories();
+
+            //Add total calories to UI
+            UICtrl.showTotalCalories(totalCalories);
+
             //Load Events
             loadEventListners();
         }
     }
 })(ItemCtrl, UICtrl);
-
 
 
 //Initiliaze App
